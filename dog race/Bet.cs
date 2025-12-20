@@ -5,7 +5,7 @@ public class Bet
 {
 	public required int Amount;
 	public required int Dog;
-	public required Guy Bettor;//czy ma sens zawsze wpisywac required?
+	public required Guy Bettor;
 
 	public string GetDescription() {
 		return Bettor.Name + " postawił " + Amount + " zł na psa numer " + Dog;

@@ -4,7 +4,7 @@ using System.Windows.Forms;
 public class Guy
 {
 	public required string Name;
-    public Bet? MyBet; //dobrze tutaj wykorzystac nullable, czy lepiej nie?
+    public Bet? MyBet;
     public int Cash;
 
     public required RadioButton MyRadioButton;

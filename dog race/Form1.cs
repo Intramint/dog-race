@@ -14,7 +14,7 @@ namespace dog_race
             betLabels = new Label[] { janekBetLabel, bartekBetLabel, arekBetLabel };
             radioButtons = new RadioButton[] { radioButton1, radioButton2, radioButton3 };
 
-            guys[0] = new Guy { Name = "Janek", Cash = 50, MyLabel = janekBetLabel, MyRadioButton = radioButton1 }; //tak jest ok, czy lepiej zawsze u¿ywaæ konstruktorów?
+            guys[0] = new Guy { Name = "Janek", Cash = 50, MyLabel = janekBetLabel, MyRadioButton = radioButton1 };
             guys[1] = new Guy { Name = "Bartek", Cash = 75, MyLabel = bartekBetLabel, MyRadioButton = radioButton2 };
             guys[2] = new Guy { Name = "Arek", Cash = 45, MyLabel = arekBetLabel, MyRadioButton = radioButton3 };
             for (int i = 0; i < 3; i++)
@@ -31,7 +31,7 @@ namespace dog_race
             double weightedGreyhoundStatsAverage = (avgSpeed + avgAcceleration) / 6 + avgSpeed / 6 + (avgStamina + avgSpeed) / 4;
 
             Random random = new Random();
-            greyhounds[0] = new Greyhound(random, dogPicture1, weightedGreyhoundStatsAverage); //czy da siê jakoœ przeiterowaæ po dogPicture{i} i czy mia³oby to tutaj sens?
+            greyhounds[0] = new Greyhound(random, dogPicture1, weightedGreyhoundStatsAverage);
             greyhounds[1] = new Greyhound(random, dogPicture2, weightedGreyhoundStatsAverage);
             greyhounds[2] = new Greyhound(random, dogPicture3, weightedGreyhoundStatsAverage);
             greyhounds[3] = new Greyhound(random, dogPicture4, weightedGreyhoundStatsAverage);
@@ -76,7 +76,7 @@ namespace dog_race
         {
             int cash = guys[currentGuy].Cash;
             int cashCap;
-            if (cash > maxBetCap) //czy maxBetCap ma tu sens, czy lepiej po prostu wpisaæ 15?
+            if (cash > maxBetCap)
             {
                 cashCap = maxBetCap;
             }
@@ -100,6 +100,11 @@ namespace dog_race
 
         private void startButton_Click(object sender, EventArgs e)
         {
+            foreach (var i in greyhounds)
+            {
+                i.total = 0;
+                i.ticks = 0;
+            }
             groupBox1.Enabled = false;
             for (int i = 0; i < 3; i++)
             {
@@ -147,6 +152,7 @@ namespace dog_race
                 {
                     if (winners[i])
                     {
+                        greyhounds[i].Wins++;
                         winnerCount++;
                         singleWinner = i + 1;
                     }
@@ -174,12 +180,17 @@ namespace dog_race
                         }
                     }
 
-                    MessageBox.Show("Wygra³y psy numer " + String.Join("", winMessageParts));
+                   // MessageBox.Show("Wygra³y psy numer " + String.Join("", winMessageParts));
                 }
                 else
                 {
-                    MessageBox.Show("Wygra³ pies numer " + singleWinner + "!");
+                   // MessageBox.Show("Wygra³ pies numer " + singleWinner + "!");
                 }
+                string text = "";
+                for(int i = 0; i < 4; i++) {
+                    text += $"pies {i}, acc = {Math.Round(greyhounds[i].inherentAccelerationStat, 4)}, stam = {Math.Round(greyhounds[i].inherentStaminaStat, 4)}, speed = {Math.Round(greyhounds[i].inherentSpeedStat, 4)}, modifier = {Math.Round((double)greyhounds[i].total / (double)greyhounds[i].ticks ,4)} wins = {greyhounds[i].Wins}\r\n";
+                }
+                MessageBox.Show(text);
 
                 timer1.Stop();
                 keepMovingAfterFinish = false;

@@ -14,19 +14,19 @@ public class Greyhound
 	private Random myRandom;
 	private double location = startingPosition;
 
-	private double inherentSpeedStat;
+    public double inherentSpeedStat;
 	public const double LowerSpeedBound = 1.5;
 	public const double HigherSpeedBound = 2.5;
 
-	private double inherentAccelerationStat; // affects negative or positive speed change in roughly the 1st 1/3 of the race
+    public double inherentAccelerationStat; // affects negative or positive speed change in roughly the 1st 1/3 of the race
 	public const double LowerAccelerationBound = 0.5;
 	public const double HigherAccelerationBound = 1.5;
 
-	private double inherentStaminaStat; //same but the last 40% instead
+	public double inherentStaminaStat; //same but the last 40% instead
 	public const double LowerStaminaBound = 0.5;
 	public const double HigherStaminaBound = 1.3;
 
-    private double randomSpeedModifier = 1;
+    public double randomSpeedModifier = 1;
 	private const double lowerModifierBound = 0.8;
 	private const double higherModifierBound = 1.2;
 	private const double lowerModifierChangeBound = -0.1;
@@ -39,6 +39,8 @@ public class Greyhound
     private const int numberOfTrackTicks = racetrackLength / distanceBetweenTicks;
 	private int nextTrackTick = startingPosition + distanceBetweenTicks;
 
+	public int Wins = 0;
+
     public Greyhound(Random MyRandom, PictureBox MyPictureBox, double weightedAverageStats)
 	{
 		this.myRandom = MyRandom;
@@ -47,7 +49,7 @@ public class Greyhound
     }
 
 
-    public bool Run() //jest jakiś lepszy sposób na ułożenie wszystkich metod, żeby łatwiej je było znaleźć w kodzie? może najpierw public, a potem private oraz posegregowane po typie zwracanej zmiennej? Czy może jakoś rozbić na więcej plików i użyć partial class?
+    public bool Run()
     {
 		double move = calculateSpeed();
         location += move;
@@ -60,6 +62,8 @@ public class Greyhound
         return false;
     }
 
+	public double total = 0;
+	public int ticks = 0;
 	private double calculateSpeed()
 	{
 		if (passedTrackTick())
@@ -79,8 +83,9 @@ public class Greyhound
 			}
 			
 		}
-        
+		ticks++;
 		rollRandomSpeedModifier();
+		total += randomSpeedModifier;
 
 		return inherentSpeedStat * randomSpeedModifier * currentStaminaModifier * currentAccelerationModifier;
     }
@@ -158,7 +163,7 @@ public class Greyhound
     }
     private void rollRandomSpeedModifier()
 	{
-		double roll = myRandom.NextDouble(); //czy tutaj lepiej by bylo użyc floata?
+		double roll = myRandom.NextDouble();
 
 		if (roll <= (double) 1 / 80) //happens around 4 times per race per dog
 		{
@@ -195,6 +200,7 @@ public class Greyhound
 				newSpeed = double.Min(newSpeed, higherModifierBound);
 				newSpeed = double.Max(newSpeed, lowerModifierBound);
 			}
+
 			randomSpeedModifier = newSpeed;
 		}
 	}
